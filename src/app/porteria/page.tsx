@@ -947,13 +947,9 @@ export default function PorteriaPage() {
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="size-11 rounded-2xl flex items-center justify-center shadow-lg shrink-0" style={{ backgroundColor: VERDE, boxShadow: `0 10px 25px -5px ${VERDE}40` }}>
-            <Shield className="size-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight group-hover:opacity-70 transition-opacity">Control de Portería</h1>
-            <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Condominio Villa Tepual</p>
-          </div>
+          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-10 sm:h-12 w-auto object-contain group-hover:opacity-70 transition-opacity" />
+          <div className="h-8 w-px bg-slate-200 hidden sm:block" />
+          <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Control de Portería</p>
         </Link>
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <Button variant="outline" className="h-11 rounded-xl font-black border-slate-200" onClick={fetchData}>

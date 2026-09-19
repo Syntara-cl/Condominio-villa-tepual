@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Shield, ShieldCheck, Power, ChevronRight } from "lucide-react"
+import { ShieldCheck, Power, ChevronRight } from "lucide-react"
 import { Button } from "@/components/uib/button"
 
 const VERDE = "#2D6A4F"
@@ -40,20 +40,11 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F5F7FA] p-3 sm:p-4 md:p-10 space-y-5 sm:space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div
-            className="size-11 rounded-2xl flex items-center justify-center shadow-lg shrink-0"
-            style={{ backgroundColor: VERDE, boxShadow: `0 10px 25px -5px ${VERDE}40` }}
-          >
-            <Shield className="size-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">
-              Condominio Villa Tepual
-            </h1>
-            <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-              Panel General
-            </p>
-          </div>
+          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-10 sm:h-12 w-auto object-contain" />
+          <div className="h-8 w-px bg-slate-200 hidden sm:block" />
+          <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:block">
+            Panel General
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
