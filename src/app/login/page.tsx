@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Shield, Loader2 } from "lucide-react"
+import { User, Lock, Loader2 } from "lucide-react"
 import { Button } from "@/components/uib/button"
 import { Input } from "@/components/uib/input"
 import { Label } from "@/components/uib/label"
@@ -35,47 +35,51 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center p-4">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center relative"
+      style={{ backgroundImage: "url(/login-bg.png)" }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-7 sm:p-9 space-y-6"
+        className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl p-7 sm:p-9 space-y-5"
       >
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="size-14 rounded-2xl bg-[#2D6A4F] flex items-center justify-center shadow-lg shadow-[#2D6A4F]/25">
-            <Shield className="size-7 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-black text-[#323232] uppercase tracking-tight">Condominio Villa Tepual</h1>
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-              Portería
-            </p>
-          </div>
+          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-16 w-auto object-contain" />
+          <p className="text-[12px] font-bold text-slate-500 uppercase tracking-wide leading-snug px-2">
+            Bienvenido a la plataforma de gestión del Condominio Villa Tepual
+          </p>
         </div>
 
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="rut" className="text-[12px] font-black uppercase tracking-widest text-slate-500">RUT</Label>
-            <Input
-              id="rut"
-              value={rut}
-              onChange={(e) => setRut(e.target.value)}
-              placeholder="12345678"
-              autoComplete="username"
-              className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-              required
-            />
+            <div className="relative">
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+              <Input
+                id="rut"
+                value={rut}
+                onChange={(e) => setRut(e.target.value)}
+                placeholder="12345678"
+                autoComplete="username"
+                className="h-12 rounded-xl bg-slate-50 border-none font-bold pl-10"
+                required
+              />
+            </div>
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="password" className="text-[12px] font-black uppercase tracking-widest text-slate-500">Contraseña</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-              required
-            />
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                className="h-12 rounded-xl bg-slate-50 border-none font-bold pl-10"
+                required
+              />
+            </div>
           </div>
         </div>
 
@@ -84,8 +88,12 @@ export default function LoginPage() {
           disabled={enviando}
           className="w-full h-12 rounded-xl bg-[#2D6A4F] hover:bg-[#245740] text-white font-black shadow-lg shadow-[#2D6A4F]/20"
         >
-          {enviando ? <Loader2 className="animate-spin size-5" /> : "Entrar"}
+          {enviando ? <Loader2 className="animate-spin size-5" /> : "Iniciar Sesión"}
         </Button>
+
+        <div className="flex justify-center pt-1">
+          <img src="/syntara-badge.png" alt="Syntara — Tecnología para comunidades" className="h-7 w-auto object-contain opacity-90" />
+        </div>
       </form>
     </div>
   )
