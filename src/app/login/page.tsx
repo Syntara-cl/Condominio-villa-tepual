@@ -25,7 +25,7 @@ export default function LoginPage() {
       })
       const result = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(result?.error || "No se pudo iniciar sesión.")
-      router.push("/porteria")
+      router.push("/dashboard")
       router.refresh()
     } catch (err: any) {
       toast.error(err?.message || "No se pudo iniciar sesión.")

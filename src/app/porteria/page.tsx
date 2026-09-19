@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   Shield, Search, LogIn, LogOut, UserPlus, Clock, Loader2,
   User, Users, RefreshCw, FileSpreadsheet, Download, Home,
@@ -945,15 +946,15 @@ export default function PorteriaPage() {
 
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="size-11 rounded-2xl flex items-center justify-center shadow-lg shrink-0" style={{ backgroundColor: VERDE, boxShadow: `0 10px 25px -5px ${VERDE}40` }}>
             <Shield className="size-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Control de Portería</h1>
+            <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight group-hover:opacity-70 transition-opacity">Control de Portería</h1>
             <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Condominio Villa Tepual</p>
           </div>
-        </div>
+        </Link>
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <Button variant="outline" className="h-11 rounded-xl font-black border-slate-200" onClick={fetchData}>
             <RefreshCw className={cn("size-5", isLoading && "animate-spin")} />
