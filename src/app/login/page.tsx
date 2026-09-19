@@ -37,7 +37,7 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center relative"
-      style={{ backgroundImage: "url(/login-bg.png)" }}
+      style={{ backgroundImage: "url(/login-bg.jpg)" }}
     >
       <form
         onSubmit={handleSubmit}
