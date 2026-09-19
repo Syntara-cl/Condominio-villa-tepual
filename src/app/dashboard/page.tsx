@@ -85,6 +85,11 @@ export default function DashboardPage() {
           </Link>
         ))}
       </div>
+
+      <div className="flex flex-col items-center gap-1 pt-4">
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma impulsada por</p>
+        <img src="/syntara-badge.png" alt="Syntara" className="h-6 w-auto object-contain opacity-80" />
+      </div>
     </div>
   )
 }
