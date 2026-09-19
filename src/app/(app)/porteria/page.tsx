@@ -2,13 +2,11 @@
 export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
 import {
   Shield, Search, LogIn, LogOut, UserPlus, Clock, Loader2,
   User, Users, RefreshCw, FileSpreadsheet, Download, Home,
   Users2, UserSquare2, CalendarDays, ChevronLeft, ChevronRight,
-  Edit2, Trash2, Power
+  Edit2, Trash2
 } from "lucide-react"
 import { Button } from "@/components/uib/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/uib/card"
@@ -290,7 +288,6 @@ function PersonaCard({ persona, tipo, isProcessing, onEntry, patentes }: {
 }
 
 export default function PorteriaPage() {
-  const router = useRouter()
   const [sesion, setSesion] = useState<{ id: string; nombre: string; rol: string } | null>(null)
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -419,12 +416,6 @@ export default function PorteriaPage() {
     } finally {
       setIsHistoryLoading(false)
     }
-  }
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
-    router.refresh()
   }
 
   // ── Patentes ────────────────────────────────────────────────────
@@ -942,15 +933,13 @@ export default function PorteriaPage() {
 
   // ── JSX ─────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#F5F7FA] p-3 sm:p-4 md:p-10 space-y-5 sm:space-y-8">
+    <div className="p-4 sm:p-6 md:p-10 space-y-5 sm:space-y-8">
 
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
-          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-10 sm:h-12 w-auto object-contain group-hover:opacity-70 transition-opacity" />
-          <div className="h-8 w-px bg-slate-200 hidden sm:block" />
-          <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Control de Portería</p>
-        </Link>
+        <div>
+          <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Control de Portería</h1>
+        </div>
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <Button variant="outline" className="h-11 rounded-xl font-black border-slate-200" onClick={fetchData}>
             <RefreshCw className={cn("size-5", isLoading && "animate-spin")} />
@@ -1069,11 +1058,6 @@ export default function PorteriaPage() {
               <p className="mt-4 text-[12px] font-bold text-slate-400 uppercase tracking-widest text-center">Los reportes se descargan en formato .xlsx</p>
             </DialogContent>
           </Dialog>
-
-          <Button variant="outline" className="h-11 rounded-xl font-bold border-slate-200 text-slate-500 gap-2" onClick={handleLogout}>
-            <Power className="size-5" />
-            <span className="hidden sm:inline">Salir</span>
-          </Button>
         </div>
       </div>
 
@@ -1644,11 +1628,6 @@ export default function PorteriaPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <div className="flex flex-col items-center gap-1 pt-4">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma impulsada por</p>
-        <img src="/syntara-badge.png" alt="Syntara" className="h-16 w-auto object-contain" />
-      </div>
     </div>
   )
 }

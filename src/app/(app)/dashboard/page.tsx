@@ -1,36 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ShieldCheck, Users2, Power, ChevronRight } from "lucide-react"
-import { Button } from "@/components/uib/button"
+import { ChevronRight } from "lucide-react"
 import { Card, CardContent } from "@/components/uib/card"
+import { MODULOS, type Rol } from "@/lib/modulos"
 
 const VERDE = "#2D6A4F"
 
-type Rol = "conserje" | "admin"
 type Sesion = { id: string; nombre: string; rol: Rol }
 
-const MODULOS: { href: string; nombre: string; descripcion: string; icon: typeof ShieldCheck; roles: Rol[] }[] = [
-  {
-    href: "/porteria",
-    nombre: "Portería",
-    descripcion: "Control de ingresos y salidas del condominio.",
-    icon: ShieldCheck,
-    roles: ["conserje", "admin"],
-  },
-  {
-    href: "/usuarios",
-    nombre: "Usuarios",
-    descripcion: "Cuentas de conserjes y administradores.",
-    icon: Users2,
-    roles: ["admin"],
-  },
-]
-
 export default function DashboardPage() {
-  const router = useRouter()
   const [sesion, setSesion] = useState<Sesion | null>(null)
 
   useEffect(() => {
@@ -40,31 +20,11 @@ export default function DashboardPage() {
       .catch(() => {})
   }, [])
 
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
-    router.push("/login")
-    router.refresh()
-  }
-
   const modulos = MODULOS.filter((m) => !sesion || m.roles.includes(sesion.rol))
   const primerNombre = sesion?.nombre?.split(" ")[0] || "Usuario"
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] p-3 sm:p-4 md:p-10 space-y-6 sm:space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-10 sm:h-12 w-auto object-contain" />
-        </div>
-        <Button
-          variant="outline"
-          className="h-11 rounded-xl font-bold border-slate-200 text-slate-500 gap-2"
-          onClick={handleLogout}
-        >
-          <Power className="size-5" />
-          <span className="hidden sm:inline">Salir</span>
-        </Button>
-      </div>
-
+    <div className="p-4 sm:p-6 md:p-10 space-y-6 sm:space-y-8">
       <div className="space-y-1">
         <p className="text-[10px] font-black uppercase tracking-[0.3em]" style={{ color: VERDE }}>Panel Personal</p>
         <h1 className="text-2xl sm:text-3xl font-black text-[#323232] tracking-tight">Bienvenido, {primerNombre}</h1>
@@ -99,11 +59,6 @@ export default function DashboardPage() {
             </Card>
           </Link>
         ))}
-      </div>
-
-      <div className="flex flex-col items-center gap-1 pt-4">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma impulsada por</p>
-        <img src="/syntara-badge.png" alt="Syntara" className="h-16 w-auto object-contain" />
       </div>
     </div>
   )

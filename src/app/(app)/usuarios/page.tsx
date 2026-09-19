@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { UserPlus, KeyRound, Power, Loader2, Users2 } from "lucide-react"
 import { Button } from "@/components/uib/button"
 import { Input } from "@/components/uib/input"
@@ -132,13 +131,9 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] p-3 sm:p-4 md:p-10 space-y-5 sm:space-y-8">
+    <div className="p-4 sm:p-6 md:p-10 space-y-5 sm:space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
-          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-10 sm:h-12 w-auto object-contain group-hover:opacity-70 transition-opacity" />
-          <div className="h-8 w-px bg-slate-200 hidden sm:block" />
-          <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Gestión de Usuarios</p>
-        </Link>
+        <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Gestión de Usuarios</h1>
 
         <Dialog open={isNewOpen} onOpenChange={setIsNewOpen}>
           <Button className="h-11 rounded-xl font-bold gap-2 text-white shadow-lg" style={{ backgroundColor: VERDE }} onClick={() => setIsNewOpen(true)}>
@@ -278,11 +273,6 @@ export default function UsuariosPage() {
           </form>
         </DialogContent>
       </Dialog>
-
-      <div className="flex flex-col items-center gap-1 pt-4">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma impulsada por</p>
-        <img src="/syntara-badge.png" alt="Syntara" className="h-16 w-auto object-contain" />
-      </div>
     </div>
   )
 }
