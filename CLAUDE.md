@@ -6,6 +6,11 @@ Primer cliente de **Syntara** (proyecto independiente de Tresol: no usar su
 infraestructura, credenciales ni base de datos). El módulo nació como una
 adaptación del control de portería del ERP Tresol al dominio residencial.
 
+**Referencia de patrones:** `C:\Users\fabia\Desktop\Tresol\tresol\` es de
+**solo lectura** — sirve para extraer ideas, patrones de UI o soluciones ya
+probadas (ej. el módulo de portería original, `export-excel.ts`,
+`passwordHash.ts`). Nunca escribir ni modificar nada ahí desde este proyecto.
+
 ## Reglas de negocio que no se rompen
 
 - **La salida la decide el conserje — nunca cerrar un ingreso automáticamente.**
