@@ -180,3 +180,10 @@ alter table visitas_frecuentes  enable row level security;
 alter table logs_porteria       enable row level security;
 alter table porteria_patentes   enable row level security;
 alter table audit_log           enable row level security;
+
+-- Sin estos GRANT, PostgREST responde 42501 (permission denied) para
+-- service_role antes incluso de evaluar RLS. No se otorga nada a
+-- anon/authenticated: quedan sin acceso por diseño (ver comentario arriba).
+grant usage on schema public to service_role;
+grant select, insert, update, delete on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;

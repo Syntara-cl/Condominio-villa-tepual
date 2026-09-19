@@ -45,9 +45,9 @@ export default function LoginPage() {
             <Shield className="size-7 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-black text-[#323232] uppercase tracking-tight">Portería</h1>
+            <h1 className="text-xl font-black text-[#323232] uppercase tracking-tight">Condominio Villa Tepual</h1>
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-              Condominio Villa Tepual
+              Portería
             </p>
           </div>
         </div>

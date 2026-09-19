@@ -3,7 +3,7 @@ import { Toaster } from "sonner"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Portería — Condominio Villa Tepual",
+  title: "Condominio Villa Tepual — Portería",
   description: "Control de ingresos y salidas del condominio",
 }
 
