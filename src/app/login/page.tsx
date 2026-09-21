@@ -92,7 +92,7 @@ export default function LoginPage() {
         </Button>
 
         <div className="flex justify-center pt-1">
-          <img src="/syntara-badge.png" alt="Syntara — Tecnología para comunidades" className="h-14 w-auto object-contain" />
+          <img src="/syntara-badge.png" alt="Syntara — Automatización y software a medida" className="h-14 w-auto object-contain" />
         </div>
       </form>
     </div>
