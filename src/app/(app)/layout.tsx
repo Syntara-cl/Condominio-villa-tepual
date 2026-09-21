@@ -153,10 +153,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
 
-        <footer className="border-t border-slate-100 bg-white px-4 py-2 flex items-center justify-center gap-2 shrink-0">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma desarrollada por</span>
+        <footer className="border-t border-slate-100 bg-white px-4 py-3 flex items-center justify-center gap-2.5 shrink-0">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Plataforma desarrollada por</span>
           <a href="https://www.syntara.cl" target="_blank" rel="noopener noreferrer" className="shrink-0">
-            <img src="/syntara-mark.png" alt="Syntara" className="h-4 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="/syntara-mark.png" alt="Syntara" className="h-6 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity" />
           </a>
         </footer>
       </div>
