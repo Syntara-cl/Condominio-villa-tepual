@@ -82,17 +82,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {colapsado ? (
             <img src="/logo-condominio-mark.png" alt="Condominio Villa Tepual" className="size-9 object-contain" />
           ) : (
-            <div className="flex flex-col gap-1">
-              <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-12 w-auto object-contain" />
-              <a
-                href="https://www.syntara.cl"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[9px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
-              >
-                by Syntara
-              </a>
-            </div>
+            <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-12 w-auto object-contain" />
           )}
         </div>
 
@@ -130,26 +120,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Power className="size-4" />
             {!colapsado && "Salir"}
           </button>
-          {!colapsado && (
-            <div className="flex flex-col items-center gap-1 pt-2">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Impulsado por</p>
-              <a href="https://www.syntara.cl" target="_blank" rel="noopener noreferrer">
-                <img src="/syntara-badge.png" alt="Syntara" className="h-11 w-auto object-contain" />
-              </a>
-            </div>
-          )}
         </div>
       </aside>
 
       {/* Header móvil: sidebar colapsa en pantallas chicas, logo + salir arriba */}
       <div className="flex-1 flex flex-col min-w-0">
         <div className="md:hidden flex items-center justify-between gap-2 bg-white shadow-sm p-3">
-          <div className="flex items-center gap-2 shrink-0 min-w-0">
-            <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-8 w-auto object-contain shrink-0" />
-            <a href="https://www.syntara.cl" target="_blank" rel="noopener noreferrer" className="shrink-0">
-              <img src="/syntara-mark.png" alt="Syntara" className="h-5 w-auto object-contain opacity-70" />
-            </a>
-          </div>
+          <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-8 w-auto object-contain shrink-0" />
           <div className="flex items-center gap-1 shrink-0">
             {[{ href: "/dashboard", nombre: "Panel Personal", icon: LayoutDashboard }, ...modulos].map((m) => {
               const activo = pathname === m.href || (m.href !== "/dashboard" && pathname.startsWith(m.href + "/"))
@@ -175,6 +152,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
+
+        <footer className="border-t border-slate-100 bg-white px-4 py-2 flex items-center justify-center gap-2 shrink-0">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Plataforma desarrollada por</span>
+          <a href="https://www.syntara.cl" target="_blank" rel="noopener noreferrer" className="shrink-0">
+            <img src="/syntara-mark.png" alt="Syntara" className="h-4 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity" />
+          </a>
+        </footer>
       </div>
     </div>
   )
