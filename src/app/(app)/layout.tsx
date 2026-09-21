@@ -107,7 +107,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </button>
 
           {!colapsado && (
-            <p className="px-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest truncate">{sesion.nombre}</p>
+            <p className="px-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-tight">{sesion.nombre}</p>
           )}
           <button
             onClick={handleLogout}
@@ -122,8 +122,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </button>
           {!colapsado && (
             <div className="flex flex-col items-center gap-1 pt-2">
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Impulsado por</p>
-              <img src="/syntara-badge.png" alt="Syntara" className="h-8 w-auto object-contain" />
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Impulsado por</p>
+              <img src="/syntara-badge.png" alt="Syntara" className="h-11 w-auto object-contain" />
             </div>
           )}
         </div>
