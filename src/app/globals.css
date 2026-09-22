@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -39,9 +39,10 @@
   --card-foreground: hsl(240, 5%, 20%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(240, 5%, 20%);
-  --primary: hsl(157, 41%, 30%);
+  /* Paleta de marca Syntara (syntara.cl) — mismo tema en todos los sistemas. */
+  --primary: hsl(201, 74%, 30%);
   --primary-foreground: #ffffff;
-  --secondary: hsl(200, 80%, 35%);
+  --secondary: hsl(194, 52%, 55%);
   --secondary-foreground: #ffffff;
   --muted: hsl(240, 5%, 96%);
   --muted-foreground: hsl(240, 5%, 50%);
@@ -50,9 +51,9 @@
   --destructive: hsl(5, 84%, 55%);
   --border: hsl(240, 5%, 93%);
   --input: hsl(240, 5%, 93%);
-  --ring: hsl(157, 41%, 30%);
-  --radius: 0.75rem;
-  --font-sans: 'Outfit', sans-serif;
+  --ring: hsl(201, 74%, 30%);
+  --radius: 1.125rem;
+  --font-sans: 'Source Sans 3', sans-serif;
 }
 
 * {

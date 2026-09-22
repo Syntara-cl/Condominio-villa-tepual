@@ -7,7 +7,7 @@ import { LayoutDashboard, Power, Loader2, PanelLeftClose, PanelLeftOpen } from "
 import { MODULOS, type Rol } from "@/lib/modulos"
 import { cn } from "@/lib/utils"
 
-const VERDE = "#2D6A4F"
+const VERDE = "#145F87" // azul de marca Syntara (nombre histórico, ver AGENTS/CLAUDE.md)
 const COLLAPSE_KEY = "vt_sidebar_collapsed"
 
 type Sesion = { id: string; nombre: string; rol: Rol }

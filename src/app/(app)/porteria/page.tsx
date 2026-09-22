@@ -21,8 +21,8 @@ import { toast } from "sonner"
 import { cn, formatFecha, formatHoraChile, getChileDateStr, sanitizePatente } from "@/lib/utils"
 import { exportExcel } from "@/lib/export-excel"
 
-const VERDE = '#2D6A4F'
-const VERDE_OSCURO = '#245740'
+const VERDE = '#145F87' // azul de marca Syntara (nombre histórico, ver AGENTS/CLAUDE.md)
+const VERDE_OSCURO = '#104c6c'
 
 type TipoPersona = 'residente' | 'visita_frecuente'
 
@@ -212,7 +212,7 @@ function DateRangeCalendar({ start, end, onChange }: {
                 "h-9 rounded-lg text-[13px] font-bold transition-colors",
                 isFuture && "text-slate-300 cursor-not-allowed",
                 !isFuture && (isStart || isEnd) && "text-white",
-                !isFuture && !isStart && !isEnd && isBetween && "bg-[#2D6A4F]/10 text-[#2D6A4F]",
+                !isFuture && !isStart && !isEnd && isBetween && "bg-[#145F87]/10 text-[#145F87]",
                 !isFuture && !isStart && !isEnd && !isBetween && "text-slate-600 hover:bg-white"
               )}
               style={!isFuture && (isStart || isEnd) ? { backgroundColor: VERDE } : undefined}
@@ -246,15 +246,15 @@ function PersonaCard({ persona, tipo, isProcessing, onEntry, patentes }: {
       <div className="flex items-center gap-4 min-w-0">
         <div className={cn(
           "size-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors",
-          esVisita ? "bg-amber-100 group-hover:bg-amber-500" : "bg-[#2D6A4F]/10 group-hover:bg-[#2D6A4F]"
+          esVisita ? "bg-amber-100 group-hover:bg-amber-500" : "bg-[#145F87]/10 group-hover:bg-[#145F87]"
         )}>
-          <User className={cn("size-6 transition-colors group-hover:text-white", esVisita ? "text-amber-600" : "text-[#2D6A4F]")} />
+          <User className={cn("size-6 transition-colors group-hover:text-white", esVisita ? "text-amber-600" : "text-[#145F87]")} />
         </div>
         <div className="min-w-0">
           <p className="font-black text-[#323232] text-base">{persona.nombre} {persona.apellido}</p>
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             {unidad && (
-              <span className={cn("text-[12px] font-bold uppercase", esVisita ? "text-amber-600" : "text-[#2D6A4F]")}>
+              <span className={cn("text-[12px] font-bold uppercase", esVisita ? "text-amber-600" : "text-[#145F87]")}>
                 {tipo === 'residente' ? `Unidad ${unidad}` : `→ Unidad ${unidad}`}
               </span>
             )}
@@ -275,7 +275,7 @@ function PersonaCard({ persona, tipo, isProcessing, onEntry, patentes }: {
       </div>
       <Button
         className={cn("text-white rounded-xl font-black px-4 h-11 shadow-lg gap-2 shrink-0",
-          esVisita ? "bg-amber-500 hover:bg-amber-600 shadow-amber-500/20" : "shadow-[#2D6A4F]/20"
+          esVisita ? "bg-amber-500 hover:bg-amber-600 shadow-amber-500/20" : "shadow-[#145F87]/20"
         )}
         style={esVisita ? undefined : { backgroundColor: VERDE }}
         onClick={() => onEntry(persona, tipo)}

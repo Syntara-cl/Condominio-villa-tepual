@@ -86,7 +86,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           disabled={enviando}
-          className="w-full h-12 rounded-xl bg-[#2D6A4F] hover:bg-[#245740] text-white font-black shadow-lg shadow-[#2D6A4F]/20"
+          className="w-full h-12 rounded-xl bg-[#145F87] hover:bg-[#104c6c] text-white font-black shadow-lg shadow-[#145F87]/20"
         >
           {enviando ? <Loader2 className="animate-spin size-5" /> : "Iniciar Sesión"}
         </Button>

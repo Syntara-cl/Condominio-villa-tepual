@@ -123,7 +123,7 @@ function DialogFooter({ className, ...props }: any) {
 function DialogTitle({ className, ...props }: any) {
   return (
     <h3
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+      className={cn("text-lg font-extrabold leading-none tracking-tight", className)}
       {...props}
     />
   )

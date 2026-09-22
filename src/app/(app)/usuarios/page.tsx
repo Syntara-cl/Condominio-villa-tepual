@@ -13,7 +13,7 @@ import {
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
-const VERDE = "#2D6A4F"
+const VERDE = "#145F87" // azul de marca Syntara (nombre histórico, ver AGENTS/CLAUDE.md)
 
 type Usuario = {
   id: string

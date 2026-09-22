@@ -60,11 +60,11 @@ export type ExcelImageSheet = {
   images: ExcelImageBlock[]
 }
 
-const BRAND    = 'FF2D6A4F'
-const DARK     = 'FF245740'
+const BRAND    = 'FF145F87' // azul de marca Syntara (nombre histórico, ver AGENTS/CLAUDE.md)
+const DARK     = 'FF104C6C'
 const WHITE    = 'FFFFFFFF'
-const ALT_ROW  = 'FFF0F7F3'
-const TOTAL_BG = 'FFD4E9DE'
+const ALT_ROW  = 'FFEEF3F6'
+const TOTAL_BG = 'FFD3E1E8'
 const BORDER   = 'FFE2E8F0'
 
 function isImageSheet(sheet: ExcelSheet | ExcelImageSheet): sheet is ExcelImageSheet {

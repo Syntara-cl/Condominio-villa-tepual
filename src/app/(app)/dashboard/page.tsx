@@ -6,7 +6,7 @@ import { ChevronRight } from "lucide-react"
 import { Card, CardContent } from "@/components/uib/card"
 import { MODULOS, type Rol } from "@/lib/modulos"
 
-const VERDE = "#2D6A4F"
+const VERDE = "#145F87" // azul de marca Syntara (nombre histórico, ver AGENTS/CLAUDE.md)
 
 type Sesion = { id: string; nombre: string; rol: Rol }
 
@@ -51,7 +51,7 @@ export default function DashboardPage() {
                   <p className="text-[12px] text-slate-500 font-medium leading-relaxed">{modulo.descripcion}</p>
                 </div>
                 <div className="mt-auto flex justify-end pt-1">
-                  <div className="size-9 rounded-full bg-slate-100 flex items-center justify-center transition-all duration-300 group-hover:bg-[#2D6A4F] group-hover:text-white">
+                  <div className="size-9 rounded-full bg-slate-100 flex items-center justify-center transition-all duration-300 group-hover:bg-[#145F87] group-hover:text-white">
                     <ChevronRight className="size-4" />
                   </div>
                 </div>
