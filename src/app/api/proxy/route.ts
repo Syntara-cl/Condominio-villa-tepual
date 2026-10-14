@@ -65,6 +65,14 @@ const LIMITE_MAX = 5000
 
 const OPERADORES = ["eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike", "is", "in"] as const
 
+// Update y delete actúan sobre un único registro, identificado por su id (uuid).
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+function idValido(match: unknown): match is { id: string } {
+  if (!match || typeof match !== "object") return false
+  const m = match as Record<string, unknown>
+  return Object.keys(m).length === 1 && typeof m.id === "string" && UUID.test(m.id)
+}
+
 function selectValido(tabla: string, data: unknown): data is string | undefined {
   if (data === undefined || data === null) return true
   if (typeof data !== "string") return false
@@ -136,11 +144,18 @@ export async function POST(request: Request) {
         const limpio = { ...fila }
         delete limpio.registrado_por_id
         delete limpio.salida_por_id
-        return table === "logs_porteria" ? { ...limpio, registrado_por_id: sesion.id } : limpio
+        if (table !== "logs_porteria") return limpio
+        // La fecha la calcula la BD desde hora_ingreso; una salida registrada al crear se firma igual.
+        delete limpio.fecha
+        return {
+          ...limpio,
+          registrado_por_id: sesion.id,
+          ...(limpio.hora_salida ? { salida_por_id: sesion.id } : {}),
+        }
       })
       resultado = await getSupabaseAdmin().from(table).insert(conAutor).select()
     } else if (method === "update") {
-      if (!match || typeof match !== "object" || Object.keys(match).length === 0) {
+      if (!idValido(match)) {
         return NextResponse.json({ error: "Falta el identificador del registro a actualizar." }, { status: 400 })
       }
       if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -149,11 +164,12 @@ export async function POST(request: Request) {
       const limpio = { ...data }
       delete limpio.registrado_por_id
       delete limpio.salida_por_id
+      if (table === "logs_porteria") delete limpio.fecha
       // Registrar la salida es lo único que firma el servidor en un update.
       if (table === "logs_porteria" && data?.hora_salida) limpio.salida_por_id = sesion.id
       resultado = await getSupabaseAdmin().from(table).update(limpio).match(match).select()
     } else {
-      if (!match || typeof match !== "object" || Object.keys(match).length === 0) {
+      if (!idValido(match)) {
         return NextResponse.json({ error: "Falta el identificador del registro a eliminar." }, { status: 400 })
       }
       resultado = await getSupabaseAdmin().from(table).delete().match(match).select()
