@@ -26,7 +26,7 @@ export default function DashboardPage() {
   return (
     <div className="p-4 sm:p-6 md:p-10 space-y-6 sm:space-y-8">
       <div className="space-y-1">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em]" style={{ color: VERDE }}>Panel Personal</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em]" style={{ color: VERDE }}>Panel personal</p>
         <h1 className="text-2xl sm:text-3xl font-black text-[#323232] tracking-tight">Bienvenido, {primerNombre}</h1>
         <p className="text-slate-500 font-medium">
           {modulos.length > 0

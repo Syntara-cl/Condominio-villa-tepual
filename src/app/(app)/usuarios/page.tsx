@@ -133,14 +133,14 @@ export default function UsuariosPage() {
   return (
     <div className="p-4 sm:p-6 md:p-10 space-y-5 sm:space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Gestión de Usuarios</h1>
+        <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Gestión de usuarios</h1>
 
         <Dialog open={isNewOpen} onOpenChange={setIsNewOpen}>
           <Button className="h-11 rounded-xl font-bold gap-2 text-white shadow-lg" style={{ backgroundColor: VERDE }} onClick={() => setIsNewOpen(true)}>
             <UserPlus className="size-5" />
             Nuevo usuario
           </Button>
-          <DialogContent className="max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none shadow-2xl">
+          <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none shadow-2xl max-h-[85vh] overflow-y-auto">
             <DialogHeader className="space-y-3">
               <div className="size-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${VERDE}1a`, color: VERDE }}>
                 <UserPlus className="size-7" />
@@ -181,7 +181,7 @@ export default function UsuariosPage() {
                       )}
                       style={newForm.rol === rol ? { backgroundColor: VERDE } : undefined}
                     >
-                      {rol}
+                      {rol === "admin" ? "Administrador" : "Conserje"}
                     </button>
                   ))}
                 </div>
@@ -200,7 +200,7 @@ export default function UsuariosPage() {
       <div className="bg-white rounded-3xl shadow-xl p-4 sm:p-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-slate-400 font-bold">
-            <Loader2 className="animate-spin size-6 mr-2" /> Cargando usuarios...
+            <Loader2 className="animate-spin size-6 mr-2" /> Cargando usuarios…
           </div>
         ) : usuarios.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
@@ -222,19 +222,23 @@ export default function UsuariosPage() {
                   </div>
                   <p className="text-sm text-slate-400 font-medium mt-0.5">{u.rut}</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     variant="outline"
-                    className="h-10 rounded-xl font-bold border-slate-200 text-slate-500 gap-2"
+                    className="h-11 px-3 sm:px-4 rounded-xl font-bold border-slate-200 text-slate-500 gap-2 shrink-0"
+                    title="Restablecer contraseña"
+                    aria-label="Restablecer contraseña"
                     onClick={() => { setResetTarget(u); setResetPassword("") }}
                   >
                     <KeyRound className="size-4" />
-                    <span className="hidden sm:inline">Restablecer clave</span>
+                    <span className="hidden sm:inline">Restablecer contraseña</span>
                   </Button>
                   <Button
                     variant="outline"
-                    className={cn("h-10 rounded-xl font-bold border-slate-200 gap-2", u.activo ? "text-red-600" : "text-emerald-600")}
+                    className={cn("h-11 px-3 sm:px-4 rounded-xl font-bold border-slate-200 gap-2 shrink-0", u.activo ? "text-red-600" : "text-emerald-600")}
                     disabled={busy === u.id}
+                    title={u.activo ? "Desactivar usuario" : "Activar usuario"}
+                    aria-label={u.activo ? "Desactivar usuario" : "Activar usuario"}
                     onClick={() => handleToggleActivo(u)}
                   >
                     {busy === u.id ? <Loader2 className="animate-spin size-4" /> : <Power className="size-4" />}
@@ -248,7 +252,7 @@ export default function UsuariosPage() {
       </div>
 
       <Dialog open={!!resetTarget} onOpenChange={(o: boolean) => !o && setResetTarget(null)}>
-        <DialogContent className="max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none shadow-2xl">
+        <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none shadow-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader className="space-y-3">
             <div className="size-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${VERDE}1a`, color: VERDE }}>
               <KeyRound className="size-7" />

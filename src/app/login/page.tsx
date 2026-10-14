@@ -41,7 +41,7 @@ export default function LoginPage() {
     >
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl p-7 sm:p-9 space-y-5"
+        className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 sm:p-9 space-y-5"
       >
         <div className="flex flex-col items-center gap-3 text-center">
           <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-16 w-auto object-contain" />
@@ -88,7 +88,7 @@ export default function LoginPage() {
           disabled={enviando}
           className="w-full h-12 rounded-xl bg-[#145F87] hover:bg-[#104c6c] text-white font-black shadow-lg shadow-[#145F87]/20"
         >
-          {enviando ? <Loader2 className="animate-spin size-5" /> : "Iniciar Sesión"}
+          {enviando ? <Loader2 className="animate-spin size-5" /> : "Iniciar sesión"}
         </Button>
 
         <div className="flex justify-center pt-1">

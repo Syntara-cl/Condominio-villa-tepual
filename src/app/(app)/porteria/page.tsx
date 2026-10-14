@@ -41,14 +41,12 @@ const getCalendarWeeks = () => {
     currentEnd.setHours(23, 59, 59, 999)
     if (currentEnd > now) currentEnd.setTime(now.getTime())
 
-    const pad = (n: number) => String(n).padStart(2, '0')
-    const fmt = (d: Date) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`
     const isCurrent = now >= currentStart && now <= currentEnd
 
     weeks.push({
       label: isCurrent
-        ? `Semana actual (${fmt(currentStart)} al ${fmt(currentEnd)})`
-        : `Semana del ${fmt(currentStart)} al ${fmt(currentEnd)}`,
+        ? `Semana actual (${formatFecha(currentStart)} al ${formatFecha(currentEnd)})`
+        : `Semana del ${formatFecha(currentStart)} al ${formatFecha(currentEnd)}`,
       start: new Date(currentStart),
       end: new Date(currentEnd)
     })
@@ -89,11 +87,6 @@ const buildDateBlocks = (startStr: string, endStr: string): Array<{ start: strin
     cursor.setDate(cursor.getDate() + 1)
   }
   return blocks
-}
-
-const isoToDDMM = (iso: string) => {
-  const [, mm, dd] = iso.split('-')
-  return `${dd}/${mm}`
 }
 
 // Muestra la hora de Chile en un <input type="datetime-local">, no la del navegador.
@@ -938,10 +931,10 @@ export default function PorteriaPage() {
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Control de Portería</h1>
+          <h1 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight leading-tight">Control de portería</h1>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <Button variant="outline" className="h-11 rounded-xl font-black border-slate-200" onClick={fetchData}>
+          <Button variant="outline" className="h-11 rounded-xl font-black border-slate-200" onClick={fetchData} title="Actualizar datos" aria-label="Actualizar datos">
             <RefreshCw className={cn("size-5", isLoading && "animate-spin")} />
           </Button>
 
@@ -949,7 +942,7 @@ export default function PorteriaPage() {
             <DialogTrigger asChild>
               <Button className="h-11 text-white rounded-xl font-bold gap-2 shadow-lg" style={{ backgroundColor: VERDE }}>
                 <FileSpreadsheet className="size-5" />
-                <span className="hidden sm:inline">Reportes Excel</span>
+                <span className="hidden sm:inline">Reportes en Excel</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none shadow-2xl max-h-[85vh] overflow-y-auto">
@@ -958,7 +951,7 @@ export default function PorteriaPage() {
                   <Download className="size-7" />
                 </div>
                 <div>
-                  <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Exportar Registros</DialogTitle>
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Exportar registros</DialogTitle>
                   <DialogDescription className="text-slate-500 font-medium text-base">Elige el período y descarga el tipo que necesitas.</DialogDescription>
                 </div>
               </DialogHeader>
@@ -974,7 +967,7 @@ export default function PorteriaPage() {
                     key={value}
                     onClick={() => setSelectedReportPeriod(value)}
                     className={cn(
-                      "flex flex-col items-center gap-0.5 py-3 px-2 rounded-2xl border-2 transition-all",
+                      "flex flex-col items-center justify-center min-h-11 gap-0.5 py-2.5 px-2 rounded-2xl border-2 transition-all",
                       selectedReportPeriod === value ? "text-white" : "border-slate-100 bg-slate-50 text-slate-400"
                     )}
                     style={selectedReportPeriod === value ? { backgroundColor: VERDE, borderColor: VERDE } : undefined}
@@ -1017,7 +1010,7 @@ export default function PorteriaPage() {
                 <div className="mt-3 flex flex-col gap-1.5">
                   <Label className="text-[12px] font-black uppercase tracking-widest ml-1" style={{ color: VERDE }}>
                     {customRangeStart && customRangeEnd
-                      ? `Rango: ${isoToDDMM(customRangeStart)} al ${isoToDDMM(customRangeEnd)}`
+                      ? `Rango: ${formatFecha(customRangeStart)} al ${formatFecha(customRangeEnd)}`
                       : customRangeStart ? "Elige la fecha final" : "Elige la fecha de inicio"}
                   </Label>
                   <DateRangeCalendar
@@ -1041,7 +1034,7 @@ export default function PorteriaPage() {
                       onClick={() => handleGenerateReport(type, selectedReportPeriod)}
                       disabled={isGenerating || rangoIncompleto}
                       className={cn(
-                        "flex flex-col items-center gap-1.5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-500 font-black text-sm uppercase tracking-wide transition-all",
+                        "flex flex-col items-center justify-center min-h-11 gap-1.5 py-3 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-500 font-black text-sm uppercase tracking-wide transition-all",
                         (isGenerating || rangoIncompleto) && "opacity-50 cursor-not-allowed"
                       )}
                     >
@@ -1053,7 +1046,7 @@ export default function PorteriaPage() {
               </div>
 
               {selectedReportPeriod === 'custom' && (!customRangeStart || !customRangeEnd) && (
-                <p className="mt-2 text-[12px] font-bold text-amber-600 uppercase tracking-widest text-center">Selecciona inicio y fin del rango para habilitar la descarga</p>
+                <p className="mt-2 text-[12px] font-bold text-amber-600 uppercase tracking-widest text-center">Selecciona el inicio y fin del rango para habilitar la descarga</p>
               )}
               <p className="mt-4 text-[12px] font-bold text-slate-400 uppercase tracking-widest text-center">Los reportes se descargan en formato .xlsx</p>
             </DialogContent>
@@ -1064,13 +1057,13 @@ export default function PorteriaPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         {[
-          { label: "Personas Adentro", value: activeEntries.length, icon: <Users className="size-5" style={{ color: VERDE }} />, color: "bg-emerald-50 border-emerald-100", vcolor: "text-emerald-800" },
-          { label: "Ingresos Hoy", value: ingresosHoy, icon: <LogIn className="size-5 text-sky-600" />, color: "bg-sky-50 border-sky-100", vcolor: "text-sky-700" },
-          { label: "Salidas Hoy", value: salidasHoy, icon: <LogOut className="size-5 text-orange-600" />, color: "bg-orange-50 border-orange-100", vcolor: "text-orange-700" },
-          { label: "Visitas Hoy", value: visitasHoy, icon: <UserPlus className="size-5 text-amber-600" />, color: "bg-amber-50 border-amber-100", vcolor: "text-amber-700" },
+          { label: "Personas adentro", value: activeEntries.length, icon: <Users className="size-5" style={{ color: VERDE }} />, color: "bg-emerald-50 border-emerald-100", vcolor: "text-emerald-800" },
+          { label: "Ingresos de hoy", value: ingresosHoy, icon: <LogIn className="size-5 text-sky-600" />, color: "bg-sky-50 border-sky-100", vcolor: "text-sky-700" },
+          { label: "Salidas de hoy", value: salidasHoy, icon: <LogOut className="size-5 text-orange-600" />, color: "bg-orange-50 border-orange-100", vcolor: "text-orange-700" },
+          { label: "Visitas de hoy", value: visitasHoy, icon: <UserPlus className="size-5 text-amber-600" />, color: "bg-amber-50 border-amber-100", vcolor: "text-amber-700" },
         ].map((k, i) => (
           <Card key={i} className={cn("border rounded-2xl shadow-none", k.color)}>
-            <CardContent className="p-4 flex items-center justify-between gap-2">
+            <CardContent className="p-3 sm:p-4 flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400 leading-tight">{k.label}</p>
                 <p className={cn("text-3xl font-black mt-1", k.vcolor)}>{k.value}</p>
@@ -1104,7 +1097,7 @@ export default function PorteriaPage() {
               )}
 
               <div>
-                <h2 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight">Registrar Ingreso</h2>
+                <h2 className="text-xl sm:text-2xl font-black text-[#323232] uppercase tracking-tight">Registrar ingreso</h2>
                 <p className="text-sm sm:text-base text-slate-400 font-medium mt-0.5">Busca un residente o registra una visita.</p>
               </div>
 
@@ -1176,7 +1169,7 @@ export default function PorteriaPage() {
                         )}
                         {filteredVisitas.length > 0 && (
                           <div className="space-y-2">
-                            <p className="text-[11px] font-black uppercase tracking-widest text-amber-600 ml-1">Visitas Frecuentes</p>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-amber-600 ml-1">Visitas frecuentes</p>
                             {filteredVisitas.map(persona => (
                               <PersonaCard key={persona.id} persona={persona} tipo="visita_frecuente" isProcessing={isProcessing} onEntry={handleRegisterEntry} patentes={patentes} />
                             ))}
@@ -1196,13 +1189,13 @@ export default function PorteriaPage() {
                   style={{ color: VERDE }}
                   onClick={() => setShowVisitaForm(!showVisitaForm)}
                 >
-                  <UserPlus className="size-5" /> REGISTRAR VISITA
+                  <UserPlus className="size-5" /> Registrar visita
                 </Button>
               </div>
 
               {showVisitaForm && (
                 <form onSubmit={handleVisitaSubmit} className="space-y-4 p-5 sm:p-6 rounded-3xl animate-in zoom-in-95 fade-in duration-200" style={{ backgroundColor: `${VERDE}0d`, border: `1px solid ${VERDE}1a` }}>
-                  <p className="text-[12px] font-black uppercase tracking-widest" style={{ color: VERDE }}>Datos de la Visita</p>
+                  <p className="text-[12px] font-black uppercase tracking-widest" style={{ color: VERDE }}>Datos de la visita</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="relative">
                       <Input placeholder="Nombre completo *" className="bg-white border-none rounded-xl h-11 px-4 font-bold"
@@ -1225,7 +1218,7 @@ export default function PorteriaPage() {
                         </div>
                       )}
                     </div>
-                    <Input placeholder="RUT (sin puntos ni guión)" className="bg-white border-none rounded-xl h-11 px-4 font-bold"
+                    <Input placeholder="RUT (sin puntos ni guion)" className="bg-white border-none rounded-xl h-11 px-4 font-bold"
                       value={visitaData.rut}
                       onChange={(e) => setVisitaData({ ...visitaData, rut: e.target.value })}
                       onBlur={(e) => lookupVisitaByRut(e.target.value)} />
@@ -1252,7 +1245,7 @@ export default function PorteriaPage() {
                       onChange={(e) => setVisitaData({ ...visitaData, observacion: e.target.value })} />
                   </div>
                   <Button className="w-full text-white rounded-xl h-12 font-black shadow-lg gap-2" style={{ backgroundColor: VERDE }} type="submit" disabled={isProcessing === 'visita'}>
-                    {isProcessing === 'visita' ? <Loader2 className="animate-spin size-6" /> : <><UserPlus className="size-5" /> REGISTRAR VISITA</>}
+                    {isProcessing === 'visita' ? <Loader2 className="animate-spin size-6" /> : <><UserPlus className="size-5" /> Registrar visita</>}
                   </Button>
                 </form>
               )}
@@ -1265,7 +1258,7 @@ export default function PorteriaPage() {
 
           {/* Selector de fecha */}
           <Card className="border-none shadow-sm rounded-3xl bg-white">
-            <CardContent className="p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className={cn("size-10 sm:size-11 rounded-2xl flex items-center justify-center shrink-0", selectedViewDate !== todayStr && "bg-amber-50")}
                   style={selectedViewDate === todayStr ? { backgroundColor: `${VERDE}1a` } : undefined}>
@@ -1276,7 +1269,7 @@ export default function PorteriaPage() {
                   <p className="text-[11px] font-black uppercase tracking-widest text-slate-400">Consultando</p>
                   <p className={cn("text-sm sm:text-base font-black truncate", selectedViewDate !== todayStr && "text-amber-600")}
                     style={selectedViewDate === todayStr ? { color: VERDE } : undefined}>
-                    {selectedViewDate === todayStr ? "Hoy — Vista en vivo" : formatFecha(selectedViewDate + "T12:00:00")}
+                    {selectedViewDate === todayStr ? "Hoy — Vista en vivo" : formatFecha(selectedViewDate)}
                   </p>
                 </div>
               </div>
@@ -1290,7 +1283,7 @@ export default function PorteriaPage() {
                   max={todayStr}
                   value={selectedViewDate}
                   onChange={(e) => setSelectedViewDate(e.target.value)}
-                  className="flex-1 lg:flex-initial h-11 px-3 bg-slate-50 rounded-2xl text-base md:text-sm font-bold text-[#323232] border-none outline-none cursor-pointer"
+                  className="flex-1 sm:flex-initial h-11 px-3 bg-slate-50 rounded-2xl text-base md:text-sm font-bold text-[#323232] border-none outline-none cursor-pointer"
                 />
               </div>
             </CardContent>
@@ -1302,7 +1295,7 @@ export default function PorteriaPage() {
               <CardHeader className="p-5 sm:p-8 pb-4">
                 <div className="flex items-center justify-between gap-2">
                   <CardTitle className="text-xl font-black uppercase tracking-tight text-[#323232]">
-                    {formatFecha(selectedViewDate + "T12:00:00")}
+                    {formatFecha(selectedViewDate)}
                   </CardTitle>
                   <Badge className="bg-amber-500 text-white px-3 h-7 font-bold text-[12px]">{historyLogs.length} registros</Badge>
                 </div>
@@ -1320,10 +1313,21 @@ export default function PorteriaPage() {
                     <div className="flex items-start justify-between gap-2">
                       <p className="font-black text-[#323232] text-base leading-tight">{nombreDeLog(log)}</p>
                       <div className="flex items-center gap-1 shrink-0">
-                        <button onClick={() => handleOpenEditLog(log)} className="size-9 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600">
+                        <button
+                          onClick={() => handleOpenEditLog(log)}
+                          title="Corregir registro"
+                          aria-label="Corregir registro"
+                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 transition-colors"
+                        >
                           <Edit2 className="size-4" />
                         </button>
-                        <button onClick={() => handleDeleteLog(log)} disabled={isProcessing === `delete-${log.id}`} className="size-9 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500">
+                        <button
+                          onClick={() => handleDeleteLog(log)}
+                          disabled={isProcessing === `delete-${log.id}`}
+                          title="Eliminar registro"
+                          aria-label="Eliminar registro"
+                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                        >
                           {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
                         </button>
                       </div>
@@ -1352,7 +1356,7 @@ export default function PorteriaPage() {
               <Card className="border-2 shadow-xl rounded-[2rem] bg-white overflow-hidden" style={{ borderColor: `${VERDE}33` }}>
                 <CardHeader className="p-5 sm:p-8 pb-4 space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="text-xl font-black uppercase tracking-tight text-[#323232]">Personas Adentro</CardTitle>
+                    <CardTitle className="text-xl font-black uppercase tracking-tight text-[#323232]">Personas adentro</CardTitle>
                     <Badge className="text-white px-3 h-7 font-bold text-[12px]" style={{ backgroundColor: VERDE }}>{activeEntries.length}</Badge>
                   </div>
                   <div className="relative">
@@ -1390,10 +1394,21 @@ export default function PorteriaPage() {
                         </span>
                         {log.patente && <span className="px-2 py-1 rounded-lg bg-white text-[11px] font-black uppercase text-slate-500">{log.patente}</span>}
                         {log.motivo && <span className="px-2 py-1 rounded-lg bg-white text-[11px] font-black uppercase text-amber-600">{log.motivo}</span>}
-                        <button onClick={() => handleOpenEditLog(log)} className="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600">
+                        <button
+                          onClick={() => handleOpenEditLog(log)}
+                          title="Corregir registro"
+                          aria-label="Corregir registro"
+                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 transition-colors"
+                        >
                           <Edit2 className="size-4" />
                         </button>
-                        <button onClick={() => handleDeleteLog(log)} disabled={isProcessing === `delete-${log.id}`} className="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500">
+                        <button
+                          onClick={() => handleDeleteLog(log)}
+                          disabled={isProcessing === `delete-${log.id}`}
+                          title="Eliminar registro"
+                          aria-label="Eliminar registro"
+                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                        >
                           {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
                         </button>
                       </div>
@@ -1406,7 +1421,7 @@ export default function PorteriaPage() {
               <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden">
                 <CardHeader className="p-5 sm:p-8 pb-4 space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="text-xl font-black uppercase tracking-tight text-[#323232]">Salidas Hoy</CardTitle>
+                    <CardTitle className="text-xl font-black uppercase tracking-tight text-[#323232]">Salidas de hoy</CardTitle>
                     <Badge className="bg-orange-500 text-white px-3 h-7 font-bold text-[12px]">{recentExits.length}</Badge>
                   </div>
                   <div className="relative">
@@ -1426,10 +1441,21 @@ export default function PorteriaPage() {
                       <div className="flex items-start justify-between gap-2">
                         <p className="font-black text-[#323232] text-base leading-tight">{nombreDeLog(log)}</p>
                         <div className="flex items-center gap-1 shrink-0">
-                          <button onClick={() => handleOpenEditLog(log)} className="size-9 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600">
+                          <button
+                            onClick={() => handleOpenEditLog(log)}
+                            title="Corregir registro"
+                            aria-label="Corregir registro"
+                            className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 transition-colors"
+                          >
                             <Edit2 className="size-4" />
                           </button>
-                          <button onClick={() => handleDeleteLog(log)} disabled={isProcessing === `delete-${log.id}`} className="size-9 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500">
+                          <button
+                            onClick={() => handleDeleteLog(log)}
+                            disabled={isProcessing === `delete-${log.id}`}
+                            title="Eliminar registro"
+                            aria-label="Eliminar registro"
+                            className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                          >
                             {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
                           </button>
                         </div>
@@ -1457,7 +1483,7 @@ export default function PorteriaPage() {
       <Dialog open={isEntryDialogOpen} onOpenChange={setIsEntryDialogOpen}>
         <DialogContent className="w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Registrar Ingreso</DialogTitle>
+            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Registrar ingreso</DialogTitle>
             <DialogDescription className="text-slate-500 font-medium text-base">
               {selectedPersona ? `${selectedPersona.nombre} ${selectedPersona.apellido}` : ''}
             </DialogDescription>
@@ -1511,7 +1537,7 @@ export default function PorteriaPage() {
       <Dialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
         <DialogContent className="w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md max-w-md rounded-[2rem] p-6 sm:p-8 bg-white border-none max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Registrar Salida</DialogTitle>
+            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Registrar salida</DialogTitle>
             <DialogDescription className="text-slate-500 font-medium text-base">
               {selectedLogForExit ? nombreDeLog(selectedLogForExit) : ''}
             </DialogDescription>
@@ -1564,7 +1590,7 @@ export default function PorteriaPage() {
       <Dialog open={isEditLogDialogOpen} onOpenChange={setIsEditLogDialogOpen}>
         <DialogContent className="w-[calc(100vw-2rem)] sm:w-auto sm:max-w-lg max-w-lg rounded-[2rem] p-6 sm:p-8 bg-white border-none max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Corregir Registro</DialogTitle>
+            <DialogTitle className="text-2xl font-black uppercase tracking-tight text-[#323232]">Corregir registro</DialogTitle>
             <DialogDescription className="text-slate-500 font-medium text-base">
               {editingLog ? nombreDeLog(editingLog) : ''}
             </DialogDescription>
