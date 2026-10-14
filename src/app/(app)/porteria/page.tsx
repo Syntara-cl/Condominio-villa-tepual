@@ -1321,15 +1321,17 @@ export default function PorteriaPage() {
                         >
                           <Edit2 className="size-4" />
                         </button>
-                        <button
-                          onClick={() => handleDeleteLog(log)}
-                          disabled={isProcessing === `delete-${log.id}`}
-                          title="Eliminar registro"
-                          aria-label="Eliminar registro"
-                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
-                        >
-                          {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-                        </button>
+                        {sesion?.rol === 'admin' && (
+                          <button
+                            onClick={() => handleDeleteLog(log)}
+                            disabled={isProcessing === `delete-${log.id}`}
+                            title="Eliminar registro"
+                            aria-label="Eliminar registro"
+                            className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                          >
+                            {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 mt-2 flex-wrap">
@@ -1402,15 +1404,17 @@ export default function PorteriaPage() {
                         >
                           <Edit2 className="size-4" />
                         </button>
-                        <button
-                          onClick={() => handleDeleteLog(log)}
-                          disabled={isProcessing === `delete-${log.id}`}
-                          title="Eliminar registro"
-                          aria-label="Eliminar registro"
-                          className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
-                        >
-                          {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-                        </button>
+                        {sesion?.rol === 'admin' && (
+                          <button
+                            onClick={() => handleDeleteLog(log)}
+                            disabled={isProcessing === `delete-${log.id}`}
+                            title="Eliminar registro"
+                            aria-label="Eliminar registro"
+                            className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                          >
+                            {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -1449,15 +1453,17 @@ export default function PorteriaPage() {
                           >
                             <Edit2 className="size-4" />
                           </button>
-                          <button
-                            onClick={() => handleDeleteLog(log)}
-                            disabled={isProcessing === `delete-${log.id}`}
-                            title="Eliminar registro"
-                            aria-label="Eliminar registro"
-                            className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
-                          >
-                            {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-                          </button>
+                          {sesion?.rol === 'admin' && (
+                            <button
+                              onClick={() => handleDeleteLog(log)}
+                              disabled={isProcessing === `delete-${log.id}`}
+                              title="Eliminar registro"
+                              aria-label="Eliminar registro"
+                              className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-white hover:text-red-500 transition-colors"
+                            >
+                              {isProcessing === `delete-${log.id}` ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5 mt-2 flex-wrap">
