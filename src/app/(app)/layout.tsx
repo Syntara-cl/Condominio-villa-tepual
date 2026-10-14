@@ -87,7 +87,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-          <NavLink href="/dashboard" nombre="Panel Personal" icon={LayoutDashboard} />
+          <NavLink href="/dashboard" nombre="Panel personal" icon={LayoutDashboard} />
           {modulos.map((m) => (
             <NavLink key={m.id} href={m.href} nombre={m.nombre} icon={m.icon} />
           ))}
@@ -97,8 +97,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <button
             onClick={toggleColapsado}
             title={colapsado ? "Expandir menú" : "Colapsar menú"}
+            aria-label={colapsado ? "Expandir menú" : "Colapsar menú"}
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 rounded-xl font-bold text-sm text-slate-400 hover:bg-slate-50 transition-all",
+              "w-full flex items-center gap-2 h-11 rounded-xl font-bold text-sm text-slate-400 hover:bg-slate-50 transition-all",
               colapsado ? "justify-center" : "px-4"
             )}
           >
@@ -111,14 +112,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           <button
             onClick={handleLogout}
-            title={colapsado ? "Salir" : undefined}
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition-all",
+              "w-full flex items-center gap-2 h-11 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition-all",
               colapsado ? "justify-center" : "px-4"
             )}
           >
             <Power className="size-4" />
-            {!colapsado && "Salir"}
+            {!colapsado && "Cerrar sesión"}
           </button>
         </div>
       </aside>
@@ -127,16 +129,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <div className="md:hidden flex items-center justify-between gap-2 bg-white shadow-sm p-3">
           <img src="/logo-condominio.png" alt="Condominio Villa Tepual" className="h-8 w-auto object-contain shrink-0" />
-          <div className="flex items-center gap-1 shrink-0">
-            {[{ href: "/dashboard", nombre: "Panel Personal", icon: LayoutDashboard }, ...modulos].map((m) => {
+          <div className="flex items-center gap-1.5 shrink-0">
+            {[{ href: "/dashboard", nombre: "Panel personal", icon: LayoutDashboard }, ...modulos].map((m) => {
               const activo = pathname === m.href || (m.href !== "/dashboard" && pathname.startsWith(m.href + "/"))
               return (
                 <Link
                   key={m.href}
                   href={m.href}
                   title={m.nombre}
+                  aria-label={m.nombre}
                   className={cn(
-                    "size-9 rounded-xl flex items-center justify-center shrink-0",
+                    "size-10 sm:size-11 rounded-xl flex items-center justify-center shrink-0",
                     activo ? "text-white" : "text-slate-400"
                   )}
                   style={activo ? { backgroundColor: VERDE } : undefined}
@@ -145,7 +148,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               )
             })}
-            <button onClick={handleLogout} className="size-9 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+            <button
+              onClick={handleLogout}
+              title="Cerrar sesión"
+              aria-label="Cerrar sesión"
+              className="size-10 sm:size-11 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-50 shrink-0"
+            >
               <Power className="size-4" />
             </button>
           </div>

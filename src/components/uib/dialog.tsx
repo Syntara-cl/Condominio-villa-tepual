@@ -74,7 +74,7 @@ function DialogContent({ className, children, showCloseButton = true, ...props }
         role="dialog"
         aria-modal="true"
         className={cn(
-          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[calc(100vw-2rem)] sm:max-w-lg bg-white border border-slate-200 rounded-2xl shadow-2xl p-6",
+          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[calc(100vw-2rem)] sm:max-w-lg bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 max-h-[85vh] overflow-y-auto",
           className
         )}
         style={{ zIndex: 9999 }}
