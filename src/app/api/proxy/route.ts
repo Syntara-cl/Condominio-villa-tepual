@@ -13,7 +13,9 @@ const PERMISOS: Record<string, Record<Metodo, Rol[]>> = {
     select: ["conserje", "admin"],
     insert: ["conserje", "admin"],
     update: ["conserje", "admin"],
-    delete: ["conserje", "admin"],
+    // Borrar un ingreso falsearía el libro de portería: solo la administración.
+    // El conserje corrige con update (queda en audit_log).
+    delete: ["admin"],
   },
   residentes: {
     select: ["conserje", "admin"],
@@ -45,7 +47,31 @@ const SELECTS_CON_JOIN: Record<string, string[]> = {
   ],
 }
 
+// Columnas que se pueden usar en filtros y orden, por tabla. Evita filtrar por
+// columnas ajenas o con rutas de relación (ej. usuarios.password_hash).
+const COLUMNAS: Record<string, string[]> = {
+  logs_porteria: [
+    "id", "residente_id", "visita_frecuente_id", "nombre_manual", "rut_manual", "unidad_destino",
+    "motivo", "patente", "acceso", "fecha", "hora_ingreso", "hora_salida", "observacion", "created_at",
+  ],
+  residentes: ["id", "nombre", "apellido", "rut", "unidad", "tipo", "telefono", "email", "patente_default", "activo", "created_at"],
+  visitas_frecuentes: [
+    "id", "nombre", "apellido", "rut", "tipo_servicio", "unidad_destino", "autorizado_por", "patente_default", "activo", "created_at",
+  ],
+  porteria_patentes: ["id", "residente_id", "visita_frecuente_id", "patente", "activo", "created_at"],
+}
+
+const LIMITE_MAX = 5000
+
 const OPERADORES = ["eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike", "is", "in"] as const
+
+// Update y delete actúan sobre un único registro, identificado por su id (uuid).
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+function idValido(match: unknown): match is { id: string } {
+  if (!match || typeof match !== "object") return false
+  const m = match as Record<string, unknown>
+  return Object.keys(m).length === 1 && typeof m.id === "string" && UUID.test(m.id)
+}
 
 function selectValido(tabla: string, data: unknown): data is string | undefined {
   if (data === undefined || data === null) return true
@@ -91,7 +117,7 @@ export async function POST(request: Request) {
 
       if (Array.isArray(filters)) {
         for (const f of filters) {
-          if (!f?.column || !OPERADORES.includes(f.operator)) {
+          if (!COLUMNAS[table].includes(f?.column) || !OPERADORES.includes(f.operator)) {
             return NextResponse.json({ error: "Filtro inválido." }, { status: 400 })
           }
           query = query.filter(f.column, f.operator, f.value)
@@ -99,34 +125,51 @@ export async function POST(request: Request) {
       }
       if (typeof order === "string") {
         const [col, dir] = order.split(":")
+        if (!COLUMNAS[table].includes(col)) {
+          return NextResponse.json({ error: "Orden inválido." }, { status: 400 })
+        }
         query = query.order(col, { ascending: dir !== "desc" })
       }
-      if (typeof limit === "number") query = query.limit(limit)
+      if (typeof limit === "number") query = query.limit(Math.min(Math.max(Math.floor(limit), 1), LIMITE_MAX))
 
       resultado = await query
     } else if (method === "insert") {
       // El autor del registro lo pone el servidor a partir de la sesión: si viniera
       // del cliente, cualquiera podría firmar un movimiento a nombre de otro conserje.
       const payload = Array.isArray(data) ? data : [data]
+      if (payload.length === 0 || payload.some((fila: any) => !fila || typeof fila !== "object" || Array.isArray(fila))) {
+        return NextResponse.json({ error: "Datos inválidos." }, { status: 400 })
+      }
       const conAutor = payload.map((fila: any) => {
         const limpio = { ...fila }
         delete limpio.registrado_por_id
         delete limpio.salida_por_id
-        return table === "logs_porteria" ? { ...limpio, registrado_por_id: sesion.id } : limpio
+        if (table !== "logs_porteria") return limpio
+        // La fecha la calcula la BD desde hora_ingreso; una salida registrada al crear se firma igual.
+        delete limpio.fecha
+        return {
+          ...limpio,
+          registrado_por_id: sesion.id,
+          ...(limpio.hora_salida ? { salida_por_id: sesion.id } : {}),
+        }
       })
       resultado = await getSupabaseAdmin().from(table).insert(conAutor).select()
     } else if (method === "update") {
-      if (!match || typeof match !== "object" || Object.keys(match).length === 0) {
+      if (!idValido(match)) {
         return NextResponse.json({ error: "Falta el identificador del registro a actualizar." }, { status: 400 })
+      }
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return NextResponse.json({ error: "Datos inválidos." }, { status: 400 })
       }
       const limpio = { ...data }
       delete limpio.registrado_por_id
       delete limpio.salida_por_id
+      if (table === "logs_porteria") delete limpio.fecha
       // Registrar la salida es lo único que firma el servidor en un update.
       if (table === "logs_porteria" && data?.hora_salida) limpio.salida_por_id = sesion.id
       resultado = await getSupabaseAdmin().from(table).update(limpio).match(match).select()
     } else {
-      if (!match || typeof match !== "object" || Object.keys(match).length === 0) {
+      if (!idValido(match)) {
         return NextResponse.json({ error: "Falta el identificador del registro a eliminar." }, { status: 400 })
       }
       resultado = await getSupabaseAdmin().from(table).delete().match(match).select()
