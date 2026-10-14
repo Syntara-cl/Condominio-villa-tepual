@@ -13,7 +13,9 @@ const PERMISOS: Record<string, Record<Metodo, Rol[]>> = {
     select: ["conserje", "admin"],
     insert: ["conserje", "admin"],
     update: ["conserje", "admin"],
-    delete: ["conserje", "admin"],
+    // Borrar un ingreso falsearía el libro de portería: solo la administración.
+    // El conserje corrige con update (queda en audit_log).
+    delete: ["admin"],
   },
   residentes: {
     select: ["conserje", "admin"],
@@ -44,6 +46,22 @@ const SELECTS_CON_JOIN: Record<string, string[]> = {
     "*, residente:residentes(nombre, apellido, unidad), registrado_por:usuarios!registrado_por_id(nombre), salida_por:usuarios!salida_por_id(nombre)",
   ],
 }
+
+// Columnas que se pueden usar en filtros y orden, por tabla. Evita filtrar por
+// columnas ajenas o con rutas de relación (ej. usuarios.password_hash).
+const COLUMNAS: Record<string, string[]> = {
+  logs_porteria: [
+    "id", "residente_id", "visita_frecuente_id", "nombre_manual", "rut_manual", "unidad_destino",
+    "motivo", "patente", "acceso", "fecha", "hora_ingreso", "hora_salida", "observacion", "created_at",
+  ],
+  residentes: ["id", "nombre", "apellido", "rut", "unidad", "tipo", "telefono", "email", "patente_default", "activo", "created_at"],
+  visitas_frecuentes: [
+    "id", "nombre", "apellido", "rut", "tipo_servicio", "unidad_destino", "autorizado_por", "patente_default", "activo", "created_at",
+  ],
+  porteria_patentes: ["id", "residente_id", "visita_frecuente_id", "patente", "activo", "created_at"],
+}
+
+const LIMITE_MAX = 5000
 
 const OPERADORES = ["eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike", "is", "in"] as const
 
@@ -91,7 +109,7 @@ export async function POST(request: Request) {
 
       if (Array.isArray(filters)) {
         for (const f of filters) {
-          if (!f?.column || !OPERADORES.includes(f.operator)) {
+          if (!COLUMNAS[table].includes(f?.column) || !OPERADORES.includes(f.operator)) {
             return NextResponse.json({ error: "Filtro inválido." }, { status: 400 })
           }
           query = query.filter(f.column, f.operator, f.value)
@@ -99,15 +117,21 @@ export async function POST(request: Request) {
       }
       if (typeof order === "string") {
         const [col, dir] = order.split(":")
+        if (!COLUMNAS[table].includes(col)) {
+          return NextResponse.json({ error: "Orden inválido." }, { status: 400 })
+        }
         query = query.order(col, { ascending: dir !== "desc" })
       }
-      if (typeof limit === "number") query = query.limit(limit)
+      if (typeof limit === "number") query = query.limit(Math.min(Math.max(Math.floor(limit), 1), LIMITE_MAX))
 
       resultado = await query
     } else if (method === "insert") {
       // El autor del registro lo pone el servidor a partir de la sesión: si viniera
       // del cliente, cualquiera podría firmar un movimiento a nombre de otro conserje.
       const payload = Array.isArray(data) ? data : [data]
+      if (payload.length === 0 || payload.some((fila: any) => !fila || typeof fila !== "object" || Array.isArray(fila))) {
+        return NextResponse.json({ error: "Datos inválidos." }, { status: 400 })
+      }
       const conAutor = payload.map((fila: any) => {
         const limpio = { ...fila }
         delete limpio.registrado_por_id
@@ -118,6 +142,9 @@ export async function POST(request: Request) {
     } else if (method === "update") {
       if (!match || typeof match !== "object" || Object.keys(match).length === 0) {
         return NextResponse.json({ error: "Falta el identificador del registro a actualizar." }, { status: 400 })
+      }
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return NextResponse.json({ error: "Datos inválidos." }, { status: 400 })
       }
       const limpio = { ...data }
       delete limpio.registrado_por_id
